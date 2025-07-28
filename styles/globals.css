@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base layout fix: ensure full screen height works */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #000; /* fallback background */
+  font-family: sans-serif;
+}
+
+body {
+  @apply text-white antialiased;
+}
+
+textarea,
+input {
+  @apply focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-150;
+}
+
+button {
+  @apply transition duration-150;
+}
