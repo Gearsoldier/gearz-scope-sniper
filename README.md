@@ -1,85 +1,106 @@
-# 🎯 GEARZ Scope Sniper
+# GEARZ Scope Sniper 🎯
 
-**GEARZ Scope Sniper** is an AI-powered scope analyzer for bug bounty hunters and red teamers. Just paste in-scope and out-of-scope targets from a bug bounty program, and Scope Sniper returns:
+GEARZ Scope Sniper is a local AI-assisted planning tool for reviewing bug bounty scope. Paste a line-by-line list of assets and exclusions to receive suggested asset tags, areas to investigate, and a review checklist from Ollama.
 
-- 🏷️ Tagged domains by type (auth, staging, wildcard, etc.)
-- ⚠️ Suggested vulnerable paths (e.g., `/api/login`, `/graphql`)
-- ✅ AI-generated attack checklists
-- 🚫 Warnings for out-of-scope items
+The application uses Next.js, React, TypeScript, and Tailwind CSS. It analyzes the text you provide; it does not contact or scan the listed assets.
 
-Built for speed. Powered by [Ollama](https://ollama.com/). No API keys required.
+## What it does
 
----
+- Separates scope text into in-scope and explicitly excluded entries
+- Asks the local `llama3:instruct` model to suggest domain tags, possible paths, and investigation ideas
+- Displays the generated analysis with counts of parsed entries
+- Copies the generated analysis to the clipboard
 
-## ⚙️ Requirements
+AI output does not establish authorization or prove a vulnerability. Always check the program's current rules yourself before taking action.
 
-- Node.js 18+
-- Ollama installed and running locally
-- `llama3:instruct` model pulled
+## Requirements
 
----
+- Node.js and npm, using a maintained Node.js version compatible with the root `package-lock.json`
+- [Ollama](https://ollama.com/) installed on the machine running the Next.js server
+- The `llama3:instruct` model downloaded locally
 
-## 🧠 Setup Instructions
+No hosted AI API key is required by the current implementation.
 
-### 1. Pull the LLM model with Ollama
+## Local setup
+
+### 1. Prepare Ollama
+
+Start Ollama if it is not already running:
+
+```bash
+ollama serve
+```
+
+In another terminal, download the model:
 
 ```bash
 ollama pull llama3:instruct
-ℹ️ This project uses llama3:instruct by default. You can change the model in lib/ai.ts.
+```
 
-2. Clone the repo
-bash
-Copy
-Edit
+### 2. Run the application
+
+```bash
 git clone https://github.com/Gearsoldier/gearz-scope-sniper.git
 cd gearz-scope-sniper
-3. Install dependencies
+npm ci
+npm run dev -- --hostname 127.0.0.1
+```
 
-npm install
-4. Run the app locally
+Open [http://localhost:3000](http://localhost:3000).
 
-npm run dev
-Then visit:
-http://localhost:3000
+Run these commands from the repository root. The nested `gearz-scope-sniper/` directory contains a separate create-next-app scaffold, not the Scope Sniper interface described here.
 
-📋 How to Use
-Paste your bug bounty scope (including in-scope and out-of-scope lines)
+## Scope input
 
-Click “Analyze Scope”
+Use one asset per line. For exclusions, use the explicit `out-of-scope:` prefix:
 
-Review:
+```text
+api.example.com
+auth.example.com
+staging.example.com
+*.example.net
+out-of-scope: admin.example.com
+out of scope: excluded.example.net
+```
 
-Tagged domains (wildcard, dev, API, etc.)
+Select **Analyze Scope**, review the results against the original program rules, and use **Copy Results** if you want to keep the analysis.
 
-Suggested vulnerable endpoints
+The parser treats every nonempty line that it does not recognize as an exclusion as in scope. It does not validate domains, expand wildcards, deduplicate entries, resolve conflicting rules, or interpret a full policy document. Headings and prose can therefore be counted as assets. The displayed totals are parsed-entry counts, not verified target counts.
 
-AI-generated attack checklist
+## Configuration
 
-Hunt smart. Stay in scope.
+The model name and endpoint are in `lib/ai.ts`:
 
-🛡️ Powered by the GEARZ Stack
-This tool is part of the GEARZ portfolio — tactical cybersecurity tools designed for hunters who don’t miss.
+- Model: `llama3:instruct`
+- Endpoint: `http://localhost:11434/api/generate`
 
-🧠 Local AI via Ollama
+The Next.js API route calls Ollama from the server. If you move the app to another machine or a container, `localhost` refers to that server environment.
 
-⚡ Zero config startup
+## Development
 
-🔍 Scope-first attack planning
+Root-level npm scripts:
 
-🧠 About the Creator
-Built by a cybersecurity architect & full-stack dev blending bug bounty
- automation with AI.
+- `npm run dev`: start the development server
+- `npm run build`: create a production build
+- `npm start`: serve a completed production build
+- `npm run lint`: invoke `next lint`
 
-🔗 LinkedIn https: https://www.linkedin.com/public-profile/settings?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_self_edit_contact-info%3BUhNtZhuVTS26%2FGQ3UuTPKw%3D%3D
-🧠 Projects: Payload Smith · Bug Chain Forge
+The root package does not declare ESLint or include a root ESLint configuration, so the lint command may require setup. No automated test script or GitHub Actions workflow is included.
 
-🧪 Example Scope Input
+### Source map
 
-api.dev.target.com
-auth.target.com
-dev.target.com
-target.com
-*.target-cdn.com
+- `app/page.tsx`: scope form, loading state, and error display
+- `app/api/analyze-scope/route.ts`: line parsing and analysis prompt
+- `lib/ai.ts`: Ollama request
+- `components/ResultPanel.tsx`: result display, counts, and copy action
+- `public/scope-sniper-bg.png`: background artwork
 
-out-of-scope: admin.target.com
-out of scope: dev2.target.com
+## Limitations and responsible use
+
+This prototype does not enforce scope, verify suggested paths, or save analysis history. Generated tags and investigation ideas can be wrong. The API has no authentication or rate limiting, so keep it local unless appropriate deployment controls are added.
+
+Use only information you are authorized to process, and remove secrets or unnecessary personal data before submitting scope text.
+
+## GEARZ portfolio
+
+Created as part of the GEARZ cybersecurity tool portfolio, alongside Payload Smith and Bug Chain Forge.
