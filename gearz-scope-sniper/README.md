@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js starter scaffold
 
-## Getting Started
+This directory contains a separate [Next.js](https://nextjs.org) starter bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It is retained inside the GEARZ Scope Sniper repository, but its `app/page.tsx` is the default starter page; it does not contain the scope-analysis interface or Ollama API route.
 
-First, run the development server:
+## Looking for Scope Sniper?
+
+Follow the [main project README](../README.md) and run the application from the repository root. The root and this nested directory have separate `package.json` and `package-lock.json` files. Installing or starting this starter does not install or start the root application.
+
+## Run the starter on its own
+
+If you specifically want to inspect this scaffold, run the following from the repository root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd gearz-scope-sniper
+npm ci
+npm run dev -- --hostname 127.0.0.1
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open the local URL printed by Next.js, normally [http://localhost:3000](http://localhost:3000). Stop any other development server using that port first. Ollama is not required for this starter page.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contents
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [`app/page.tsx`](app/page.tsx): default Next.js starter page
+- [`app/layout.tsx`](app/layout.tsx): layout and Geist fonts loaded through `next/font`
+- [`package.json`](package.json): independent starter dependencies and development scripts
 
-## Learn More
+This scaffold uses Next.js 15.4.4, React 19.1.0, and Tailwind CSS 4, as declared in its package manifest. These versions differ from the root application. Its scripts include `dev`, `build`, `start`, and `lint`; build and lint results are not verified by this documentation update.
 
-To learn more about Next.js, take a look at the following resources:
+## Framework resources
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Next.js documentation](https://nextjs.org/docs)
+- [Learn Next.js](https://nextjs.org/learn)
+- [Next.js source repository](https://github.com/vercel/next.js)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For Scope Sniper's model setup, data handling, and deployment limitations, use the [main project README](../README.md).
